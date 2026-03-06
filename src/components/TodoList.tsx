@@ -12,7 +12,7 @@ export function TodoList({
   title: string;
   todos: Todo[];
   onToggle?: (id: TodoId) => void;
-  onDelete?: (id: TodoId) => void;
+  onDelete?: (id: TodoId) => void | Promise<void>;
   toggling?: Record<number, true>;
   deleting?: Record<number, true>;
 }) {
