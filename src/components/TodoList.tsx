@@ -1,7 +1,17 @@
-import type { Todo } from "@/types/todo";
+import type { Todo, TodoId } from "@/types/todo";
 import { TodoItem } from "@/components/TodoItem";
 
-export function TodoList({ title, todos }: { title: string; todos: Todo[] }) {
+export function TodoList({
+  title,
+  todos,
+  onToggle,
+  toggling,
+}: {
+  title: string;
+  todos: Todo[];
+  onToggle?: (id: TodoId) => void;
+  toggling?: Record<number, true>;
+}) {
   return (
     <section className="rounded-2xl border bg-white/50 p-4">
       <h2 className="text-base font-semibold">{title}</h2>
@@ -11,7 +21,12 @@ export function TodoList({ title, todos }: { title: string; todos: Todo[] }) {
       ) : (
         <ul className="mt-3 space-y-2">
           {todos.map((t) => (
-            <TodoItem key={t.id} todo={t} />
+            <TodoItem
+              key={t.id}
+              todo={t}
+              onToggle={onToggle}
+              disabled={!!toggling?.[t.id]}
+            />
           ))}
         </ul>
       )}
