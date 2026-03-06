@@ -32,6 +32,12 @@ async function safeJson(res: Response): Promise<unknown> {
   }
 }
 
+function extractMessage(data: unknown): string | null {
+  if (!data || typeof data !== "object") return null;
+  const rec = data as Record<string, unknown>;
+  return typeof rec.message === "string" ? rec.message : null;
+}
+
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${path}`;
 
@@ -49,18 +55,12 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 
   if (!res.ok) {
     const data = await safeJson(res);
-    const msg =
-      (typeof data === "object" &&
-        data &&
-        "message" in data &&
-        typeof (data as any).message === "string" &&
-        (data as any).message) ||
-      `Request failed (${res.status})`;
+    const msg = extractMessage(data) ?? `Request failed (${res.status})`;
 
     throw new ApiError(res.status, msg, data);
   }
 
-  // DummyJSON a veces responde con 200 OK pero sin JSON válido (ej. DELETE /todos/{id}), así que no asumir que siempre se puede parsear    
+  // DummyJSON a veces responde con 200 OK pero sin JSON válido (ej. DELETE /todos/{id}), así que no asumir que siempre se puede parsear
   const data = await safeJson(res);
   return data as T;
 }
