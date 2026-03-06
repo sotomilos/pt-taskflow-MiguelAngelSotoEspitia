@@ -5,6 +5,8 @@ import { useTodosPage } from "@/hooks/useTodosPage";
 import { TodoList } from "@/components/TodoList";
 import { Pagination } from "@/components/Pagination";
 import { ErrorState, LoadingState } from "@/components/States";
+import { useCreateTodo } from "@/hooks/useCreateTodo";
+import { CreateTodoForm } from "@/components/CreateTodoForm";
 
 export default function HomePage() {
   const [page, setPage] = useState(1);
@@ -15,9 +17,13 @@ export default function HomePage() {
   // Mostramos locales arriba para que el usuario vea lo que creó “persistente” en UI
   const hasLocal = useMemo(() => localTodos.length > 0, [localTodos.length]);
 
+  // Para crear nuevas tareas (optimistic UI)
+  const { create, creating, error: createError } = useCreateTodo();
+
   return (
     <main className="mx-auto max-w-3xl space-y-4 p-4 sm:p-6">
       <header className="rounded-2xl border bg-white/50 p-4">
+        <CreateTodoForm onCreate={create} creating={creating} error={createError} />
         <h1 className="text-xl font-semibold">TaskFlow – Todos</h1>
         <p className="mt-1 text-sm opacity-70">
           Lista paginada (10 por página). CRUD y filtros se agregan en los siguientes
