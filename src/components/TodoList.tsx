@@ -5,12 +5,16 @@ export function TodoList({
   title,
   todos,
   onToggle,
+  onDelete,
   toggling,
+  deleting,
 }: {
   title: string;
   todos: Todo[];
   onToggle?: (id: TodoId) => void;
+  onDelete?: (id: TodoId) => void;
   toggling?: Record<number, true>;
+  deleting?: Record<number, true>;
 }) {
   return (
     <section className="rounded-2xl border bg-white/50 p-4">
@@ -20,14 +24,19 @@ export function TodoList({
         <p className="mt-2 text-sm opacity-70">No hay tareas para mostrar.</p>
       ) : (
         <ul className="mt-3 space-y-2">
-          {todos.map((t) => (
-            <TodoItem
-              key={t.id}
-              todo={t}
-              onToggle={onToggle}
-              disabled={!!toggling?.[t.id]}
-            />
-          ))}
+          {todos.map((t) => {
+            const busy = !!toggling?.[t.id] || !!deleting?.[t.id];
+
+            return (
+              <TodoItem
+                key={t.id}
+                todo={t}
+                onToggle={onToggle}
+                onDelete={onDelete}
+                disabled={busy}
+              />
+            );
+          })}
         </ul>
       )}
     </section>

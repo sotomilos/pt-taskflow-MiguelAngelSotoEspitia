@@ -3,10 +3,12 @@ import type { Todo, TodoId } from "@/types/todo";
 export function TodoItem({
   todo,
   onToggle,
+  onDelete,
   disabled,
 }: {
   todo: Todo;
   onToggle?: (id: TodoId) => void;
+  onDelete?: (id: TodoId) => void;
   disabled?: boolean;
 }) {
   return (
@@ -36,7 +38,28 @@ export function TodoItem({
         </div>
       </label>
 
-      <span className="text-xs opacity-60">#{todo.id}</span>
+      <div className="flex flex-col items-end gap-2">
+        <span className="text-xs opacity-60">#{todo.id}</span>
+
+        {onDelete ? (
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              const ok = window.confirm("¿Seguro que quieres eliminar esta tarea?");
+              if (!ok) return;
+
+              onDelete(todo.id);
+            }}
+            className="rounded-lg border px-3 py-1 text-xs disabled:opacity-50"
+          >
+            Eliminar
+          </button>
+        ) : null}
+      </div>
     </li>
   );
 }
