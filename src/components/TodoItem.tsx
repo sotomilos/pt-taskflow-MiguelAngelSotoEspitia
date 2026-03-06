@@ -2,49 +2,59 @@ import type { Todo, TodoId } from "@/types/todo";
 import { useState } from "react";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 
-export function TodoItem({
-  todo,
-  onToggle,
-  onDelete,
-  disabled,
-}: {
+type TodoItemProps = {
   todo: Todo;
   onToggle?: (id: TodoId) => void;
   onDelete?: (id: TodoId) => void | Promise<void>;
   disabled?: boolean;
-}) {
+};
+
+export function TodoItem({ todo, onToggle, onDelete, disabled }: TodoItemProps) {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  return (
-    <li className="flex items-start justify-between gap-3 rounded-xl border bg-white/70 p-3">
-      <label className="flex cursor-pointer items-start gap-3">
-        <input
-          type="checkbox"
-          className="mt-1 h-4 w-4"
-          checked={todo.completed}
-          disabled={disabled}
-          onChange={() => onToggle?.(todo.id)}
-        />
+  const statusLabel = todo.completed ? "Completada" : "Pendiente";
+  const statusClass = todo.completed ? "status-completed" : "status-pending";
 
-        <div>
-          <p
-            className={[
-              "text-sm font-medium",
-              todo.completed ? "line-through opacity-70" : "",
-            ].join(" ")}
-          >
-            {todo.todo}
-          </p>
-          <p className="mt-1 text-xs opacity-70">
-            Estado: {todo.completed ? "Completada ✅" : "Pendiente ⏳"}
-            {disabled ? " (procesando…)" : ""}
-          </p>
+  return (
+    <li
+      className={[
+        "card-task group flex items-start justify-between gap-4",
+        disabled ? "opacity-70" : "",
+      ].join(" ")}
+    >
+      <label className="flex min-w-0 flex-1 cursor-pointer items-start gap-3">
+        <div className="pt-0.5">
+          <input
+            type="checkbox"
+            checked={todo.completed}
+            disabled={disabled}
+            onChange={() => onToggle?.(todo.id)}
+            className="h-5 w-5 cursor-pointer rounded border-white/20 bg-transparent accent-blue-500 disabled:cursor-not-allowed"
+          />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <p
+              className={[
+                "truncate text-sm font-medium text-white md:text-base",
+                todo.completed ? "line-through text-white/45" : "",
+              ].join(" ")}
+            >
+              {todo.todo}
+            </p>
+
+            <span className={`chip ${statusClass}`}>{statusLabel}</span>
+          </div>
+
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-white/55">
+            <span>ID #{todo.id}</span>
+            {disabled ? <span>• procesando...</span> : null}
+          </div>
         </div>
       </label>
 
-      <div className="flex flex-col items-end gap-2">
-        <span className="text-xs opacity-60">#{todo.id}</span>
-
+      <div className="flex shrink-0 items-center gap-2">
         {onDelete ? (
           <>
             <button
@@ -55,7 +65,7 @@ export function TodoItem({
                 e.stopPropagation();
                 setConfirmOpen(true);
               }}
-              className="rounded-lg border px-3 py-1 text-xs disabled:opacity-50"
+              className="btn-danger px-3 py-2 text-xs"
             >
               Eliminar
             </button>

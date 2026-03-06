@@ -124,4 +124,15 @@ body {
     );
     border-color: rgba(255, 255, 255, 0.08);
   }
+  .status-pending {
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.24);
+    background: rgba(251, 191, 36, 0.08);
+  }
+
+  .status-completed {
+    color: #4ade80;
+    border-color: rgba(74, 222, 128, 0.24);
+    background: rgba(74, 222, 128, 0.08);
+  }
 }

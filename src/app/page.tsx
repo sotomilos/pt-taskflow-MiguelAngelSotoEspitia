@@ -73,8 +73,8 @@ export default function HomePage() {
                   TaskFlow
                 </h1>
                 <p className="subtitle max-w-xl">
-                  Administra tareas con paginación, optimistic UI, estado local
-                  y una experiencia visual más moderna, clara y profesional.
+                  Administra tareas con paginación, optimistic UI, estado local y una
+                  experiencia visual más moderna, clara y profesional.
                 </p>
               </div>
 
@@ -88,9 +88,7 @@ export default function HomePage() {
             <div className="grid gap-4 md:grid-cols-3">
               <div className="surface-muted p-4">
                 <p className="text-sm text-white/60">Tareas visibles</p>
-                <p className="mt-2 text-2xl font-semibold text-white">
-                  {totalVisible}
-                </p>
+                <p className="mt-2 text-2xl font-semibold text-white">{totalVisible}</p>
               </div>
 
               <div className="surface-muted p-4">
@@ -100,9 +98,7 @@ export default function HomePage() {
 
               <div className="surface-muted p-4">
                 <p className="text-sm text-white/60">Fuente remota</p>
-                <p className="mt-2 text-2xl font-semibold text-white">
-                  DummyJSON
-                </p>
+                <p className="mt-2 text-2xl font-semibold text-white">DummyJSON</p>
               </div>
             </div>
           </div>
@@ -127,18 +123,13 @@ export default function HomePage() {
             <div>
               <h2 className="title">Crear tarea</h2>
               <p className="subtitle">
-                Las nuevas tareas se reflejan primero en UI para una experiencia
-                más ágil.
+                Las nuevas tareas se reflejan primero en UI para una experiencia más ágil.
               </p>
             </div>
             <span className="chip">Estado local</span>
           </div>
 
-          <CreateTodoForm
-            onCreate={create}
-            creating={creating}
-            error={createError}
-          />
+          <CreateTodoForm onCreate={create} creating={creating} error={createError} />
         </section>
 
         {toggleError ? (

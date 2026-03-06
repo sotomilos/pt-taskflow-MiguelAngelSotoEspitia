@@ -42,12 +42,10 @@ export function TodoList({
       {isEmpty ? (
         <div className="surface-muted flex min-h-[140px] items-center justify-center p-6 text-center">
           <div className="max-w-sm">
-            <p className="text-sm font-medium text-white">
-              No hay tareas para mostrar
-            </p>
+            <p className="text-sm font-medium text-white">No hay tareas para mostrar</p>
             <p className="mt-2 text-sm text-white/60">
-              Prueba cambiando el filtro o creando una nueva tarea para ver
-              resultados aquí.
+              Prueba cambiando el filtro o creando una nueva tarea para ver resultados
+              aquí.
             </p>
           </div>
         </div>
