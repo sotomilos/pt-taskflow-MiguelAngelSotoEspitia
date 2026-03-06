@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TaskFlow (Prueba Técnica Frontend Jr.)
 
-## Getting Started
+Aplicación de una sola página (`/`) construida con **Next.js (App Router)** + **React** + **TypeScript** + **TailwindCSS**.
 
-First, run the development server:
+Implementa un CRUD de tareas consumiendo la API de DummyJSON:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+- Listar tareas paginadas (10 por página)
+- Crear tarea (POST)
+- Marcar como completada (PATCH)
+- Eliminar tarea (DELETE) con confirmación (modal)
+- Filtro local (Todas / Completadas / Pendientes)
+
+> **Nota importante:** DummyJSON “simula” writes pero **no persiste** cambios realmente.  
+> Por eso la app guarda el estado final en memoria (store) para que el usuario vea sus cambios reflejados.
+
+---
+
+## 🚀 Demo (Deploy)
+
+- Vercel: **Cuando acabe de modificar el css colocare url estoy volviendo a recordar three.js**
+
+---
+
+## 🧰 Stack
+
+- Next.js (App Router) + React
+- TypeScript
+- TailwindCSS
+- Zustand (state management)
+- ESLint + Prettier
+
+---
+
+## ✅ Requisitos cubiertos
+
+- ✅ Ruta única: todo vive en `/` (`src/app/page.tsx`)
+- ✅ Lista paginada (10 por página), con loading, error y botón de reintento
+- ✅ Crear todo (POST) y persistir en estado local
+- ✅ Toggle completed (PATCH) con actualización optimista
+- ✅ Eliminar (DELETE) con confirmación (modal custom, sin `window.confirm`)
+- ✅ Filtro local (no dispara nuevas llamadas)
+- ✅ Fetching encapsulado en custom hooks (no en componentes de UI)
+- ✅ TypeScript sin `any`
+- ✅ Componentes reutilizables (TodoList, TodoItem, Pagination, ConfirmDialog, etc.)
+- ✅ `pnpm build` sin errores
+
+---
+
+## 🏗️ Estructura del proyecto
+
+- `src/app/page.tsx` → página única `/` (orquesta UI)
+- `src/lib/api.ts` → cliente HTTP tipado hacia DummyJSON
+- `src/lib/env.ts` → variables de entorno tipadas
+- `src/types/todo.ts` → tipos TS para modelos y respuestas
+- `src/store/todosStore.ts` → Zustand store (fuente de verdad del estado)
+- `src/hooks/*` → lógica de datos (fetch + actions)
+- `src/components/*` → UI reutilizable
+
+---
+
+## 🧠 Decisiones técnicas
+
+### 1) Estado local como fuente de verdad
+
+DummyJSON no persiste cambios realmente, por lo que:
+
+- Después de **crear/togglear/eliminar**, la UI debe reflejar cambios de forma consistente.
+- Se usa **Zustand** para mantener el estado local en memoria.
+
+### 2) IDs negativos para tareas locales
+
+Cuando se crea una tarea, se agrega **primero al store** con un ID negativo (ej: `-1`, `-2`, etc.).
+Esto evita colisiones con IDs reales de la API y permite:
+
+- Mostrar tareas creadas por el usuario inmediatamente.
+- Diferenciar claramente “local” vs “remoto”.
+
+### 3) Actualizaciones optimistas
+
+Para mejorar UX:
+
+- Toggle y delete se reflejan inmediatamente en UI.
+- Si la API falla, se hace rollback (se revierte el cambio).
+
+### 4) Hooks para data fetching (separación UI/lógica)
+
+La UI no hace fetch directo:
+
+- `useTodosPage(page)` → trae página, loading/error/retry
+- `useCreateTodo()` → creación con POST + persistencia local
+- `useToggleTodo()` → PATCH optimista + rollback
+- `useDeleteTodo()` → DELETE optimista + rollback
+
+---
+
+## ⚙️ Variables de entorno
+
+Archivo de ejemplo: `.env.example`
+
+NEXT_PUBLIC_API_BASE_URL=https://dummyjson.com
+
+---
+
+## ⚒️ Cómo correr el proyecto
+
+Instalar dependencias:
+
+````terminal
+pnpm install
+
+Modo desarrollo:
+
+```terminal
 pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build producción:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```terminal
+pnpm build
+pnpm start
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Lint y formato:
 
-## Learn More
+```terminal
+pnpm lint
+pnpm format
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+El filtro es 100% local: no hace llamadas adicionales.
+la paginacion remota usa GET /todos?limit=10skip=...
+Los cambios locales se muestran arriba como "Creadas por ti (local)"
+````
