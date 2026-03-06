@@ -9,6 +9,7 @@ import { useCreateTodo } from "@/hooks/useCreateTodo";
 import { CreateTodoForm } from "@/components/CreateTodoForm";
 import { useToggleTodo } from "@/hooks/useToggleTodo";
 import { useDeleteTodo } from "@/hooks/useDeleteTodo";
+import { TodoFilter, type TodoFilterValue } from "@/components/TodoFilter";
 
 export default function HomePage() {
   const [page, setPage] = useState(1);
@@ -38,9 +39,38 @@ export default function HomePage() {
     clearError: clearDeleteError,
   } = useDeleteTodo();
 
+  // Para filtrar (solo a nivel de UI)
+  const [filter, setFilter] = useState<TodoFilterValue>("all");
+
+  // Filtramos los remotos según el filtro seleccionado (los locales no los filtramos para que el usuario vea todo lo que creó, aunque no se pierda la opción de filtro)
+  const filteredLocalTodos = useMemo(() => {
+    if (filter === "all") return localTodos;
+    if (filter === "completed") return localTodos.filter((t) => t.completed);
+    return localTodos.filter((t) => !t.completed);
+  }, [filter, localTodos]);
+
+  // Solo filtramos los remotos porque los locales ya son “nuestra versión de la verdad” y el usuario espera verlos siempre, incluso si no pasan el filtro (ej: completados) para evitar confusión de “dónde están mis tareas recién creadas”
+  const filteredRemoteTodos = useMemo(() => {
+    if (filter === "all") return remoteTodos;
+    if (filter === "completed") return remoteTodos.filter((t) => t.completed);
+    return remoteTodos.filter((t) => !t.completed);
+  }, [filter, remoteTodos]);
+
+  // Para mostrar conteos en el filtro
+  const counts = useMemo(() => {
+    const shown = [...localTodos, ...remoteTodos];
+    const completed = shown.filter((t) => t.completed).length;
+    return {
+      all: shown.length,
+      completed,
+      pending: shown.length - completed,
+    };
+  }, [localTodos, remoteTodos]);
+
   return (
     <main className="mx-auto max-w-3xl space-y-4 p-4 sm:p-6">
       <header className="rounded-2xl border bg-white/50 p-4">
+        <TodoFilter value={filter} onChange={setFilter} counts={counts} />
         <CreateTodoForm onCreate={create} creating={creating} error={createError} />
         {toggleError ? (
           <div className="rounded-xl border bg-white/70 p-3 text-sm">
@@ -82,7 +112,7 @@ export default function HomePage() {
           {hasLocal && (
             <TodoList
               title="Creadas por ti (local)"
-              todos={localTodos}
+              todos={filteredLocalTodos}
               onToggle={toggle}
               onDelete={remove}
               toggling={toggling}
@@ -92,7 +122,7 @@ export default function HomePage() {
 
           <TodoList
             title="Tareas (DummyJSON)"
-            todos={remoteTodos}
+            todos={filteredRemoteTodos}
             onToggle={toggle}
             onDelete={remove}
             toggling={toggling}
