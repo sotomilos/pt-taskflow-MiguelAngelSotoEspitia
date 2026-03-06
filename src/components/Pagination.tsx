@@ -10,25 +10,17 @@ export function Pagination({
   onNext: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-xl border bg-white/70 p-3">
-      <button
-        onClick={onPrev}
-        disabled={page <= 1}
-        className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
-      >
+    <div className="surface flex items-center justify-between gap-3 p-3">
+      <button onClick={onPrev} disabled={page <= 1} className="btn-secondary">
         ← Anterior
       </button>
 
-      <div className="text-sm">
-        Página <span className="font-semibold">{page}</span> de{" "}
-        <span className="font-semibold">{totalPages}</span>
+      <div className="text-sm text-white/80">
+        Página <span className="font-semibold text-white">{page}</span> de{" "}
+        <span className="font-semibold text-white">{totalPages}</span>
       </div>
 
-      <button
-        onClick={onNext}
-        disabled={page >= totalPages}
-        className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
-      >
+      <button onClick={onNext} disabled={page >= totalPages} className="btn-secondary">
         Siguiente →
       </button>
     </div>

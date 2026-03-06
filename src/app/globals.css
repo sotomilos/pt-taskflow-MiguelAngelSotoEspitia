@@ -1,26 +1,94 @@
 @import "tailwindcss";
 
+/* =========================
+   Base theme (performance-friendly)
+   ========================= */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(900px 500px at 12% 10%, rgba(99, 102, 241, 0.22), transparent 60%),
+    radial-gradient(700px 500px at 88% 18%, rgba(56, 189, 248, 0.18), transparent 62%),
+    radial-gradient(900px 700px at 50% 110%, rgba(236, 72, 153, 0.1), transparent 60%),
+    linear-gradient(180deg, #070a12 0%, #0b1020 45%, #070a12 100%);
+  color: rgba(255, 255, 255, 0.92);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.35);
+}
+
+/* =========================
+   Reusable UI classes (pro)
+   ========================= */
+@layer components {
+  .container-page {
+    @apply mx-auto max-w-3xl px-4 py-6;
+  }
+
+  .surface {
+    @apply rounded-2xl border border-white/10 bg-white/[0.06] shadow-lg shadow-black/20;
+  }
+
+  .surface-muted {
+    @apply rounded-2xl border border-white/10 bg-white/[0.04];
+  }
+
+  .title {
+    @apply text-xl font-semibold tracking-tight;
+  }
+
+  .subtitle {
+    @apply mt-1 text-sm text-white/70;
+  }
+
+/* Buttons */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-ghost,
+.btn-danger {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium
+    transition-colors focus:outline-none focus:ring-2 focus:ring-white/20
+    disabled:pointer-events-none disabled:opacity-50;
+}
+
+.btn-primary {
+  @apply bg-indigo-500 text-white hover:bg-indigo-400;
+}
+
+.btn-secondary {
+  @apply bg-white/10 text-white hover:bg-white/15;
+}
+
+.btn-ghost {
+  @apply bg-transparent text-white/80 hover:bg-white/10;
+}
+
+.btn-danger {
+  @apply bg-rose-500/90 text-white hover:bg-rose-400;
+}
+  .input {
+    @apply w-full rounded-xl border border-white/10 bg-white/[0.06]
+    px-3 py-2 text-sm text-white placeholder-white/40
+    outline-none focus:ring-2 focus:ring-indigo-500/40;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full border border-white/10 bg-white/[0.06]
+    px-2.5 py-1 text-xs text-white/80;
+  }
+
+  .divider {
+    @apply my-3 h-px w-full bg-white/10;
+  }
 }

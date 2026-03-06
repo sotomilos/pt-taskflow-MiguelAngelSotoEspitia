@@ -68,41 +68,52 @@ export default function HomePage() {
   }, [localTodos, remoteTodos]);
 
   return (
-    <main className="mx-auto max-w-3xl space-y-4 p-4 sm:p-6">
-      <header className="rounded-2xl border bg-white/50 p-4">
-        <TodoFilter value={filter} onChange={setFilter} counts={counts} />
-        <CreateTodoForm onCreate={create} creating={creating} error={createError} />
-        {toggleError ? (
-          <div className="rounded-xl border bg-white/70 p-3 text-sm">
-            <p className="font-medium">No se pudo actualizar el estado.</p>
-            <p className="mt-1 opacity-80">{toggleError}</p>
-            <button
-              onClick={clearToggleError}
-              className="mt-2 rounded-lg border px-3 py-1 text-sm"
-            >
-              Cerrar
-            </button>
-          </div>
-        ) : null}
-        {deleteError ? (
-          <div className="rounded-xl border bg-white/70 p-3 text-sm">
-            <p className="font-medium">No se pudo eliminar la tarea.</p>
-            <p className="mt-1 opacity-80">{deleteError}</p>
-            <button
-              onClick={clearDeleteError}
-              className="mt-2 rounded-lg border px-3 py-1 text-sm"
-            >
-              Cerrar
-            </button>
-          </div>
-        ) : null}
-        <h1 className="text-xl font-semibold">TaskFlow – Todos</h1>
-        <p className="mt-1 text-sm opacity-70">
-          Lista paginada (10 por página). CRUD y filtros se agregan en los siguientes
-          commits.
+    <main className="container-page space-y-4 sm:px-6">
+      {/* Header / Branding */}
+      <header className="surface p-4">
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="title">TaskFlow</h1>
+          <span className="chip">Next.js + TS</span>
+        </div>
+        <p className="subtitle">
+          CRUD con paginación, optimistic UI, estado local y filtro local.
         </p>
       </header>
 
+      {/* Actions */}
+      <TodoFilter value={filter} onChange={setFilter} counts={counts} />
+      <CreateTodoForm onCreate={create} creating={creating} error={createError} />
+
+      {/* Inline errors (toggle/delete) */}
+      {toggleError ? (
+        <div className="surface p-3 text-sm">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-semibold">No se pudo actualizar el estado.</p>
+              <p className="text-white/70">{toggleError}</p>
+            </div>
+            <button onClick={clearToggleError} className="btn-secondary">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {deleteError ? (
+        <div className="surface p-3 text-sm">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-semibold">No se pudo eliminar la tarea.</p>
+              <p className="text-white/70">{deleteError}</p>
+            </div>
+            <button onClick={clearDeleteError} className="btn-secondary">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Data states */}
       {loading && <LoadingState />}
 
       {!loading && error && <ErrorState message={error} onRetry={retry} />}

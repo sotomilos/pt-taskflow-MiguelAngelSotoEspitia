@@ -17,16 +17,20 @@ export function TodoList({
   deleting?: Record<number, true>;
 }) {
   return (
-    <section className="rounded-2xl border bg-white/50 p-4">
-      <h2 className="text-base font-semibold">{title}</h2>
+    <section className="surface p-4">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-base font-semibold">{title}</h2>
+        <span className="chip">{todos.length} items</span>
+      </div>
+
+      <div className="divider" />
 
       {todos.length === 0 ? (
-        <p className="mt-2 text-sm opacity-70">No hay tareas para mostrar.</p>
+        <p className="text-sm text-white/70">No hay tareas para mostrar.</p>
       ) : (
-        <ul className="mt-3 space-y-2">
+        <ul className="space-y-2">
           {todos.map((t) => {
             const busy = !!toggling?.[t.id] || !!deleting?.[t.id];
-
             return (
               <TodoItem
                 key={t.id}
