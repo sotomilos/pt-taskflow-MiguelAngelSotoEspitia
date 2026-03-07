@@ -170,9 +170,17 @@ export default function HomePage() {
           </section>
         ) : null}
 
-        {loading && <LoadingState />}
+        {loading && (
+          <section className="surface p-4 md:p-5">
+            <LoadingState />
+          </section>
+        )}
 
-        {!loading && error && <ErrorState message={error} onRetry={retry} />}
+        {!loading && error && (
+          <section className="surface p-4 md:p-5">
+            <ErrorState message={error} onRetry={retry} />
+          </section>
+        )}
 
         {!loading && !error && (
           <div className="space-y-6">
