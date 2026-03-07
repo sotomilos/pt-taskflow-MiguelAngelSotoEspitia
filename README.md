@@ -1,132 +1,228 @@
-# TaskFlow (Prueba Técnica Frontend Jr.)
+# TaskFlow
 
-Aplicación de una sola página (`/`) construida con **Next.js (App Router)** + **React** + **TypeScript** + **TailwindCSS**.
+Aplicación de gestión de tareas desarrollada como prueba técnica frontend con **Next.js**, **React**, **TypeScript** y **Tailwind CSS**.
 
-Implementa un CRUD de tareas consumiendo la API de DummyJSON:
+La app consume la API de **DummyJSON** para listar tareas y permite gestionar el estado de forma fluida con una capa local en memoria para reflejar los cambios del usuario de manera consistente.
 
-- Listar tareas paginadas (10 por página)
-- Crear tarea (POST)
-- Marcar como completada (PATCH)
-- Eliminar tarea (DELETE) con confirmación (modal)
-- Filtro local (Todas / Completadas / Pendientes)
+## Demo
 
-> **Nota importante:** DummyJSON “simula” writes pero **no persiste** cambios realmente.  
-> Por eso la app guarda el estado final en memoria (store) para que el usuario vea sus cambios reflejados.
+- **Aplicación desplegada:** [TaskFlow en Vercel](https://pt-taskflow-miguel-angel-soto-espit.vercel.app)
+- **Repositorio:** [pt-taskflow-MiguelAngelSotoEspitia](https://github.com/sotomilos/pt-taskflow-MiguelAngelSotoEspitia)
 
 ---
 
-## 🚀 Demo (Deploy)
+## Características principales
 
-- Vercel: **Cuando acabe de modificar el css colocare url estoy volviendo a recordar three.js**
+- Listado de tareas con paginación
+- Creación de nuevas tareas
+- Cambio de estado de completado
+- Eliminación con confirmación mediante modal
+- Filtro local por estado:
+  - Todas
+  - Completadas
+  - Pendientes
+- Estados de carga, error y reintento
+- Actualizaciones optimistas para mejorar la experiencia de usuario
+- Persistencia visual local usando store en memoria
 
----
-
-## 🧰 Stack
-
-- Next.js (App Router) + React
-- TypeScript
-- TailwindCSS
-- Zustand (state management)
-- ESLint + Prettier
-
----
-
-## ✅ Requisitos cubiertos
-
-- ✅ Ruta única: todo vive en `/` (`src/app/page.tsx`)
-- ✅ Lista paginada (10 por página), con loading, error y botón de reintento
-- ✅ Crear todo (POST) y persistir en estado local
-- ✅ Toggle completed (PATCH) con actualización optimista
-- ✅ Eliminar (DELETE) con confirmación (modal custom, sin `window.confirm`)
-- ✅ Filtro local (no dispara nuevas llamadas)
-- ✅ Fetching encapsulado en custom hooks (no en componentes de UI)
-- ✅ TypeScript sin `any`
-- ✅ Componentes reutilizables (TodoList, TodoItem, Pagination, ConfirmDialog, etc.)
-- ✅ `pnpm build` sin errores
+> **Nota:** DummyJSON simula operaciones de escritura (`POST`, `PATCH`, `DELETE`), pero no persiste realmente los cambios.  
+> Por eso la aplicación mantiene el estado actualizado localmente para que la UI refleje las acciones del usuario de forma consistente.
 
 ---
 
-## 🏗️ Estructura del proyecto
+## Stack tecnológico
 
-- `src/app/page.tsx` → página única `/` (orquesta UI)
-- `src/lib/api.ts` → cliente HTTP tipado hacia DummyJSON
-- `src/lib/env.ts` → variables de entorno tipadas
-- `src/types/todo.ts` → tipos TS para modelos y respuestas
-- `src/store/todosStore.ts` → Zustand store (fuente de verdad del estado)
-- `src/hooks/*` → lógica de datos (fetch + actions)
-- `src/components/*` → UI reutilizable
-
----
-
-## 🧠 Decisiones técnicas
-
-### 1) Estado local como fuente de verdad
-
-DummyJSON no persiste cambios realmente, por lo que:
-
-- Después de **crear/togglear/eliminar**, la UI debe reflejar cambios de forma consistente.
-- Se usa **Zustand** para mantener el estado local en memoria.
-
-### 2) IDs negativos para tareas locales
-
-Cuando se crea una tarea, se agrega **primero al store** con un ID negativo (ej: `-1`, `-2`, etc.).
-Esto evita colisiones con IDs reales de la API y permite:
-
-- Mostrar tareas creadas por el usuario inmediatamente.
-- Diferenciar claramente “local” vs “remoto”.
-
-### 3) Actualizaciones optimistas
-
-Para mejorar UX:
-
-- Toggle y delete se reflejan inmediatamente en UI.
-- Si la API falla, se hace rollback (se revierte el cambio).
-
-### 4) Hooks para data fetching (separación UI/lógica)
-
-La UI no hace fetch directo:
-
-- `useTodosPage(page)` → trae página, loading/error/retry
-- `useCreateTodo()` → creación con POST + persistencia local
-- `useToggleTodo()` → PATCH optimista + rollback
-- `useDeleteTodo()` → DELETE optimista + rollback
+- **Next.js 16** (App Router)
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS 4**
+- **Zustand** para manejo de estado
+- **Vitest + Testing Library** para pruebas
+- **ESLint + Prettier** para calidad y formato del código
 
 ---
 
-## ⚙️ Variables de entorno
+## Arquitectura y decisiones técnicas
 
-Archivo de ejemplo: `.env.example`
+### 1. Estado local como fuente de verdad
+Como la API no persiste cambios reales, el estado final visible al usuario se mantiene en un store global con Zustand.
 
+### 2. IDs negativos para tareas locales
+Las tareas creadas localmente reciben IDs negativos temporales para evitar colisiones con los IDs reales de la API.
+
+### 3. Actualizaciones optimistas
+Las operaciones de completar y eliminar se reflejan primero en la interfaz.  
+Si la petición falla, se realiza rollback para mantener consistencia.
+
+### 4. Separación entre UI y lógica
+La lógica de negocio y fetching está encapsulada en custom hooks, mientras que los componentes se enfocan en la presentación.
+
+---
+
+## Estructura del proyecto
+
+```text
+src/
+├─ app/
+│  ├─ globals.css
+│  ├─ layout.tsx
+│  └─ page.tsx
+├─ components/
+│  ├─ ConfirmDialog.tsx
+│  ├─ CreateTodoForm.tsx
+│  ├─ Pagination.tsx
+│  ├─ States.tsx
+│  ├─ Toaster.tsx
+│  ├─ TodoFilter.tsx
+│  ├─ TodoItem.tsx
+│  └─ TodoList.tsx
+├─ hooks/
+│  ├─ useCreateTodo.ts
+│  ├─ useDeleteTodo.ts
+│  ├─ useTodosPage.ts
+│  └─ useToggleTodo.ts
+├─ lib/
+├─ store/
+│  └─ todosStore.ts
+├─ test/
+│  ├─ resetStores.ts
+│  └─ setup.ts
+├─ tests/
+│  ├─ components/
+│  └─ hooks/
+└─ types/
+```
+
+---
+
+## Flujo funcional
+
+La aplicación trabaja sobre una única ruta (`/`) y permite:
+
+1. Consultar tareas paginadas desde la API
+2. Crear nuevas tareas
+3. Marcar tareas como completadas o pendientes
+4. Eliminar tareas con confirmación
+5. Filtrar resultados sin generar nuevas llamadas remotas
+
+---
+
+## Variables de entorno
+
+Crea un archivo `.env.local` a partir del archivo de ejemplo:
+
+```bash
+cp .env.example .env.local
+```
+
+Contenido esperado:
+
+```env
 NEXT_PUBLIC_API_BASE_URL=https://dummyjson.com
+```
 
 ---
 
-## ⚒️ Cómo correr el proyecto
+## Instalación y ejecución local
 
-Instalar dependencias:
+### 1. Instalar dependencias
 
-````terminal
+```bash
 pnpm install
+```
 
-Modo desarrollo:
+### 2. Ejecutar en desarrollo
 
-```terminal
+```bash
 pnpm dev
+```
 
-Build producción:
+### 3. Compilar para producción
 
-```terminal
+```bash
 pnpm build
 pnpm start
+```
 
-Lint y formato:
+---
 
-```terminal
+## Scripts disponibles
+
+```bash
+pnpm dev
+pnpm build
+pnpm start
+pnpm test
+pnpm test:watch
+pnpm test:coverage
 pnpm lint
+pnpm lint:fix
 pnpm format
+pnpm format:check
+```
 
+---
 
-El filtro es 100% local: no hace llamadas adicionales.
-la paginacion remota usa GET /todos?limit=10skip=...
-Los cambios locales se muestran arriba como "Creadas por ti (local)"
-````
+## Testing
+
+El proyecto incluye pruebas para componentes y hooks clave.
+
+### Componentes probados
+- `TodoFilter`
+- `TodoItem`
+- `TodoList`
+
+### Hooks probados
+- `useDeleteTodo`
+- `useToggleTodo`
+
+Ejecutar pruebas:
+
+```bash
+pnpm test
+```
+
+Ejecutar cobertura:
+
+```bash
+pnpm test:coverage
+```
+
+---
+
+## Enfoque de calidad
+
+- Componentes reutilizables y desacoplados
+- Estado centralizado con reglas claras de actualización
+- Manejo explícito de loading y errores
+- Código tipado con TypeScript
+- Formato y linting automatizados
+
+---
+
+## Posibles mejoras futuras
+
+- Persistencia real con backend propio
+- Búsqueda por texto
+- Ordenamiento por prioridad o fecha
+- Pruebas end-to-end
+- Mejoras adicionales de accesibilidad y navegación por teclado
+
+---
+
+## Autor
+
+**Miguel Ángel Soto Espitia**  
+GitHub: [@sotomilos](https://github.com/sotomilos)
+
+---
+
+## Contexto
+
+Este proyecto fue desarrollado como parte de una prueba técnica frontend, con énfasis en:
+
+- consumo de APIs
+- manejo de estado
+- separación de responsabilidades
+- experiencia de usuario
+- buenas prácticas de desarrollo

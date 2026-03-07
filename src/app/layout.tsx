@@ -14,7 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TaskFlow",
+  title: "TaskFlow | Prueba Técnica Frontend",
+  description:
+    "Aplicación de gestión de tareas desarrollada con Next.js, React, TypeScript y Tailwind CSS. Incluye paginación, filtros locales, actualizaciones optimistas y manejo de estado con Zustand usando la API de DummyJSON.",
   icons: {
     icon: "/task.png",
   },
