@@ -1,8 +1,8 @@
-# TaskFlow
+# TaskFlow | Prueba Técnica Frontend
 
 Aplicación de gestión de tareas desarrollada como prueba técnica frontend con **Next.js**, **React**, **TypeScript** y **Tailwind CSS**.
 
-La app consume la API de **DummyJSON** para listar tareas y permite gestionar el estado de forma fluida con una capa local en memoria para reflejar los cambios del usuario de manera consistente.
+La app consume la API pública de **DummyJSON** para listar tareas y permite gestionar el estado de forma fluida mediante una capa local en memoria, asegurando que la interfaz refleje de forma consistente las acciones realizadas por el usuario.
 
 ## Demo
 
@@ -13,9 +13,9 @@ La app consume la API de **DummyJSON** para listar tareas y permite gestionar el
 
 ## Características principales
 
-- Listado de tareas con paginación
+- Listado de tareas con paginación remota
 - Creación de nuevas tareas
-- Cambio de estado de completado
+- Cambio de estado entre completada y pendiente
 - Eliminación con confirmación mediante modal
 - Filtro local por estado:
   - Todas
@@ -23,10 +23,10 @@ La app consume la API de **DummyJSON** para listar tareas y permite gestionar el
   - Pendientes
 - Estados de carga, error y reintento
 - Actualizaciones optimistas para mejorar la experiencia de usuario
-- Persistencia visual local usando store en memoria
+- Persistencia visual local mediante un store en memoria
 
-> **Nota:** DummyJSON simula operaciones de escritura (`POST`, `PATCH`, `DELETE`), pero no persiste realmente los cambios.  
-> Por eso la aplicación mantiene el estado actualizado localmente para que la UI refleje las acciones del usuario de forma consistente.
+> **Nota:** DummyJSON simula correctamente las operaciones de escritura (`POST`, `PATCH`, `DELETE`), pero no persiste realmente los cambios en el servidor.  
+> Por esta razón, la aplicación mantiene un estado local como fuente de verdad para reflejar correctamente en la UI las acciones del usuario.
 
 ---
 
@@ -36,7 +36,7 @@ La app consume la API de **DummyJSON** para listar tareas y permite gestionar el
 - **React 19**
 - **TypeScript**
 - **Tailwind CSS 4**
-- **Zustand** para manejo de estado
+- **Zustand** para manejo de estado global
 - **Vitest + Testing Library** para pruebas
 - **ESLint + Prettier** para calidad y formato del código
 
@@ -46,20 +46,24 @@ La app consume la API de **DummyJSON** para listar tareas y permite gestionar el
 
 ### 1. Estado local como fuente de verdad
 
-Como la API no persiste cambios reales, el estado final visible al usuario se mantiene en un store global con Zustand.
+Dado que la API no persiste cambios reales, el estado final visible al usuario se mantiene en un store global con **Zustand**. Esto permite conservar una experiencia consistente sin depender del comportamiento limitado del backend simulado.
 
 ### 2. IDs negativos para tareas locales
 
-Las tareas creadas localmente reciben IDs negativos temporales para evitar colisiones con los IDs reales de la API.
+Las tareas creadas localmente reciben IDs negativos temporales para evitar colisiones con los IDs reales provenientes de la API.
 
 ### 3. Actualizaciones optimistas
 
-Las operaciones de completar y eliminar se reflejan primero en la interfaz.  
-Si la petición falla, se realiza rollback para mantener consistencia.
+Las operaciones de completar y eliminar se reflejan primero en la interfaz para ofrecer una experiencia más ágil.  
+Si la petición falla, se realiza rollback para mantener la consistencia del estado.
 
 ### 4. Separación entre UI y lógica
 
-La lógica de negocio y fetching está encapsulada en custom hooks, mientras que los componentes se enfocan en la presentación.
+La lógica de negocio, fetching y actualización de datos está encapsulada en custom hooks, mientras que los componentes se enfocan únicamente en la presentación y la interacción visual.
+
+---
+
+## Estructura del proyecto
 
 ---
 
@@ -86,6 +90,8 @@ src/
 │  ├─ useTodosPage.ts
 │  └─ useToggleTodo.ts
 ├─ lib/
+│  ├─ api.ts
+│  └─ env.ts
 ├─ store/
 │  └─ todosStore.ts
 ├─ test/
@@ -93,7 +99,8 @@ src/
 │  └─ setup.ts
 ├─ tests/
 │  ├─ components/
-│  └─ hooks/
+│  ├─ hooks/
+│  └─ store/
 └─ types/
 ```
 
@@ -101,13 +108,13 @@ src/
 
 ## Flujo funcional
 
-La aplicación trabaja sobre una única ruta (`/`) y permite:
+La aplicación trabaja sobre una única ruta (/) y permite:
 
 1. Consultar tareas paginadas desde la API
 2. Crear nuevas tareas
 3. Marcar tareas como completadas o pendientes
 4. Eliminar tareas con confirmación
-5. Filtrar resultados sin generar nuevas llamadas remotas
+5. Filtrar resultados localmente sin generar llamadas adicionales a la API
 
 ---
 
@@ -172,15 +179,25 @@ pnpm format:check
 El proyecto incluye pruebas para componentes y hooks clave.
 
 ### Componentes probados
-
+- `ConfirmDialog`
 - `TodoFilter`
 - `TodoItem`
 - `TodoList`
 
 ### Hooks probados
-
 - `useDeleteTodo`
 - `useToggleTodo`
+
+### Store probados
+- `todosStore`
+
+
+### Cobertura actual
+- `Test: 34`
+- `Statements: 95.09%`
+- `Branches: 79.74%`
+- `Functions: 96%`
+- `Lines: 97.165`
 
 Ejecutar pruebas:
 
@@ -203,6 +220,7 @@ pnpm test:coverage
 - Manejo explícito de loading y errores
 - Código tipado con TypeScript
 - Formato y linting automatizados
+- Pruebas automatizadas como valor agregado
 
 ---
 
@@ -213,6 +231,7 @@ pnpm test:coverage
 - Ordenamiento por prioridad o fecha
 - Pruebas end-to-end
 - Mejoras adicionales de accesibilidad y navegación por teclado
+- Soporte para edición de tareas
 
 ---
 
@@ -227,8 +246,9 @@ GitHub: [@sotomilos](https://github.com/sotomilos)
 
 Este proyecto fue desarrollado como parte de una prueba técnica frontend, con énfasis en:
 
-- consumo de APIs
-- manejo de estado
+- consumo e integración de APIs
+- manejo de estado local
 - separación de responsabilidades
 - experiencia de usuario
 - buenas prácticas de desarrollo
+- calidad de código
