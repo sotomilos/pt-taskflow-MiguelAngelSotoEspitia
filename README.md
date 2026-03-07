@@ -45,16 +45,20 @@ La app consume la API de **DummyJSON** para listar tareas y permite gestionar el
 ## Arquitectura y decisiones técnicas
 
 ### 1. Estado local como fuente de verdad
+
 Como la API no persiste cambios reales, el estado final visible al usuario se mantiene en un store global con Zustand.
 
 ### 2. IDs negativos para tareas locales
+
 Las tareas creadas localmente reciben IDs negativos temporales para evitar colisiones con los IDs reales de la API.
 
 ### 3. Actualizaciones optimistas
+
 Las operaciones de completar y eliminar se reflejan primero en la interfaz.  
 Si la petición falla, se realiza rollback para mantener consistencia.
 
 ### 4. Separación entre UI y lógica
+
 La lógica de negocio y fetching está encapsulada en custom hooks, mientras que los componentes se enfocan en la presentación.
 
 ---
@@ -168,11 +172,13 @@ pnpm format:check
 El proyecto incluye pruebas para componentes y hooks clave.
 
 ### Componentes probados
+
 - `TodoFilter`
 - `TodoItem`
 - `TodoList`
 
 ### Hooks probados
+
 - `useDeleteTodo`
 - `useToggleTodo`
 
