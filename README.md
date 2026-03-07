@@ -197,7 +197,7 @@ El proyecto incluye pruebas para componentes y hooks clave.
 - `Statements: 95.09%`
 - `Branches: 79.74%`
 - `Functions: 96%`
-- `Lines: 97.165`
+- `Lines: 97.16%`
 
 Ejecutar pruebas:
 
