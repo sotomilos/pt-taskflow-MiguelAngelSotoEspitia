@@ -1,26 +1,28 @@
-export function Pagination({
-  page,
-  totalPages,
-  onPrev,
-  onNext,
-}: {
+type PaginationProps = {
   page: number;
   totalPages: number;
   onPrev: () => void;
   onNext: () => void;
-}) {
+};
+
+export function Pagination({ page, totalPages, onPrev, onNext }: PaginationProps) {
+  const isFirst = page <= 1;
+  const isLast = page >= totalPages;
+
   return (
-    <div className="surface flex items-center justify-between gap-3 p-3">
-      <button onClick={onPrev} disabled={page <= 1} className="btn-secondary">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <button onClick={onPrev} disabled={isFirst} className="btn-secondary">
         ← Anterior
       </button>
 
-      <div className="text-sm text-white/80">
-        Página <span className="font-semibold text-white">{page}</span> de{" "}
-        <span className="font-semibold text-white">{totalPages}</span>
+      <div className="flex items-center justify-center gap-2 text-sm text-white/70">
+        <span>Página</span>
+        <span className="chip-active px-3 py-1 text-xs">{page}</span>
+        <span>de</span>
+        <span className="chip px-3 py-1 text-xs">{totalPages}</span>
       </div>
 
-      <button onClick={onNext} disabled={page >= totalPages} className="btn-secondary">
+      <button onClick={onNext} disabled={isLast} className="btn-secondary">
         Siguiente →
       </button>
     </div>
