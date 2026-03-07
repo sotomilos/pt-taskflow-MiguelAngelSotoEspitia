@@ -18,8 +18,6 @@ export default function HomePage() {
   const { localTodos, remoteTodos, totalPages, loading, error, retry } =
     useTodosPage(page);
 
-  const hasLocal = useMemo(() => localTodos.length > 0, [localTodos.length]);
-
   const { create, creating, error: createError } = useCreateTodo();
 
   const {
@@ -59,100 +57,118 @@ export default function HomePage() {
     };
   }, [localTodos, remoteTodos]);
 
-  const totalVisible = filteredLocalTodos.length + filteredRemoteTodos.length;
+  const visibleTodos = useMemo(
+    () => [...filteredLocalTodos, ...filteredRemoteTodos],
+    [filteredLocalTodos, filteredRemoteTodos]
+  );
+
+  const totalVisible = visibleTodos.length;
+  const progress = counts.all ? Math.round((counts.completed / counts.all) * 100) : 0;
 
   return (
     <main className="container-page">
-      <div className="space-y-6">
-        <section className="page-shell p-5 md:p-7">
-          <div className="flex flex-col gap-6">
-            <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div className="max-w-2xl">
-                <span className="eyebrow">Task management demo</span>
+      <div className="space-y-8">
+        <section className="page-shell px-5 py-6 md:px-8 md:py-8">
+          <div className="flex flex-col gap-8">
+            <header className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-2xl space-y-4">
+                <span className="eyebrow">Organiza tu día</span>
 
-                <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-5xl">
-                  TaskFlow
-                </h1>
+                <div className="space-y-3">
+                  <h1 className="text-4xl font-semibold tracking-tight text-white md:text-5xl">
+                    TaskFlow
+                  </h1>
 
-                <p className="subtitle max-w-xl">
-                  Administra tareas con paginación, optimistic UI, estado local y
-                  una experiencia visual más moderna, clara y profesional.
-                </p>
+                  <p className="subtitle max-w-2xl text-base md:text-lg">
+                    Crea tareas, mantén el control de tus pendientes y avanza con
+                    claridad en un espacio simple, limpio y enfocado.
+                  </p>
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                <span className="chip">Next.js</span>
-                <span className="chip">TypeScript</span>
-                <span className="chip">Optimistic UI</span>
+              <div className="surface-muted min-w-[280px] p-5 md:p-6">
+                <p className="text-sm text-white/60">Progreso general</p>
+
+                <div className="mt-3 flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-3xl font-semibold text-white">{progress}%</p>
+                    <p className="mt-1 text-sm text-white/60">
+                      {counts.completed} completadas de {counts.all}
+                    </p>
+                  </div>
+
+                  <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white/70">
+                    Página {page} de {totalPages}
+                  </div>
+                </div>
               </div>
             </header>
 
             <div className="grid gap-4 md:grid-cols-3">
-              <div className="surface-muted p-4">
+              <div className="surface-muted p-5">
                 <p className="text-sm text-white/60">Tareas visibles</p>
+                <p className="mt-2 text-2xl font-semibold text-white">{totalVisible}</p>
+              </div>
+
+              <div className="surface-muted p-5">
+                <p className="text-sm text-white/60">Completadas</p>
                 <p className="mt-2 text-2xl font-semibold text-white">
-                  {totalVisible}
+                  {counts.completed}
                 </p>
               </div>
 
-              <div className="surface-muted p-4">
-                <p className="text-sm text-white/60">Página actual</p>
-                <p className="mt-2 text-2xl font-semibold text-white">{page}</p>
-              </div>
-
-              <div className="surface-muted p-4">
-                <p className="text-sm text-white/60">Fuente remota</p>
+              <div className="surface-muted p-5">
+                <p className="text-sm text-white/60">Pendientes</p>
                 <p className="mt-2 text-2xl font-semibold text-white">
-                  DummyJSON
+                  {counts.pending}
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="surface p-4 md:p-5">
-          <div className="section-header">
-            <div>
-              <h2 className="title">Filtrar tareas</h2>
-              <p className="subtitle">
-                El filtrado es local y no dispara nuevas peticiones.
-              </p>
-            </div>
-          </div>
-
-          <div className="divider" />
-
-          <TodoFilter value={filter} onChange={setFilter} counts={counts} />
-        </section>
-
-        <section className="surface p-4 md:p-5">
-          <div className="section-header">
-            <div>
-              <h2 className="title">Crear tarea</h2>
-              <p className="subtitle">
-                Se refleja primero en UI porque la API de prueba no persiste
-                cambios.
-              </p>
+        <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+          <section className="surface px-5 py-5 md:px-6 md:py-6">
+            <div className="section-header">
+              <div className="space-y-2">
+                <h2 className="title">Ver tareas</h2>
+                <p className="section-copy">
+                  Elige la vista que necesitas para enfocarte en lo importante.
+                </p>
+              </div>
             </div>
 
-            <span className="chip">POST + estado local</span>
-          </div>
+            <div className="mt-5">
+              <TodoFilter value={filter} onChange={setFilter} counts={counts} />
+            </div>
+          </section>
 
-          <div className="divider" />
+          <section className="surface px-5 py-5 md:px-6 md:py-6">
+            <div className="section-header">
+              <div className="space-y-2">
+                <h2 className="title">Nueva tarea</h2>
+                <p className="section-copy">
+                  Añade un pendiente claro y accionable para empezar de inmediato.
+                </p>
+              </div>
+            </div>
 
-          <CreateTodoForm
-            onCreate={create}
-            creating={creating}
-            error={createError}
-          />
-        </section>
+            <div className="mt-5">
+              <CreateTodoForm
+                onCreate={create}
+                creating={creating}
+                error={createError}
+              />
+            </div>
+          </section>
+        </div>
 
         {toggleError ? (
-          <section className="surface p-4 md:p-5">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <section className="surface px-5 py-5 md:px-6 md:py-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <p className="text-sm font-semibold text-white">
-                  No se pudo actualizar el estado.
+                  No pudimos actualizar la tarea.
                 </p>
                 <p className="mt-1 text-sm text-white/70">{toggleError}</p>
               </div>
@@ -165,11 +181,11 @@ export default function HomePage() {
         ) : null}
 
         {deleteError ? (
-          <section className="surface p-4 md:p-5">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <section className="surface px-5 py-5 md:px-6 md:py-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <p className="text-sm font-semibold text-white">
-                  No se pudo eliminar la tarea.
+                  No pudimos eliminar la tarea.
                 </p>
                 <p className="mt-1 text-sm text-white/70">{deleteError}</p>
               </div>
@@ -182,47 +198,38 @@ export default function HomePage() {
         ) : null}
 
         {loading ? (
-          <section className="surface p-4 md:p-5">
+          <section className="surface px-5 py-5 md:px-6 md:py-6">
             <LoadingState />
           </section>
         ) : null}
 
         {!loading && error ? (
-          <section className="surface p-4 md:p-5">
+          <section className="surface px-5 py-5 md:px-6 md:py-6">
             <ErrorState message={error} onRetry={retry} />
           </section>
         ) : null}
 
         {!loading && !error ? (
           <div className="space-y-6">
-            {hasLocal ? (
-              <TodoList
-                title="Creadas por ti"
-                todos={filteredLocalTodos}
-                onToggle={toggle}
-                onDelete={remove}
-                toggling={toggling}
-                deleting={deleting}
-              />
-            ) : null}
-
             <TodoList
-              title="Tareas disponibles"
-              todos={filteredRemoteTodos}
+              title="Tus tareas"
+              todos={visibleTodos}
               onToggle={toggle}
               onDelete={remove}
               toggling={toggling}
               deleting={deleting}
             />
 
-            <section className="surface p-4 md:p-5">
-              <Pagination
-                page={page}
-                totalPages={totalPages}
-                onPrev={() => setPage((p) => Math.max(1, p - 1))}
-                onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
-              />
-            </section>
+            {totalPages > 1 ? (
+              <section className="surface px-5 py-5 md:px-6 md:py-6">
+                <Pagination
+                  page={page}
+                  totalPages={totalPages}
+                  onPrev={() => setPage((p) => Math.max(1, p - 1))}
+                  onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
+                />
+              </section>
+            ) : null}
           </div>
         ) : null}
       </div>

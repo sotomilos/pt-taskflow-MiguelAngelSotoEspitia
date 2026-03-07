@@ -8,12 +8,8 @@ describe("TodoFilter", () => {
     render(<TodoFilter value="all" onChange={vi.fn()} />);
 
     expect(screen.getByRole("button", { name: "Todas" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Completadas" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Pendientes" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Completadas" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pendientes" })).toBeInTheDocument();
 
     expect(screen.queryByText("10")).not.toBeInTheDocument();
     expect(screen.queryByText("5")).not.toBeInTheDocument();

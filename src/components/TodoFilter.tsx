@@ -16,9 +16,8 @@ export function TodoFilter({ value, onChange, counts }: TodoFilterProps) {
   ];
 
   return (
-    <div className="space-y-5">
-      {/* FILTER BUTTONS */}
-      <div className="flex flex-wrap gap-3 pt-1">
+    <div className="surface-muted rounded-3xl p-2">
+      <div className="flex flex-wrap gap-3">
         {items.map((item) => {
           const active = value === item.key;
 
@@ -36,25 +35,30 @@ export function TodoFilter({ value, onChange, counts }: TodoFilterProps) {
               onClick={() => onChange(item.key)}
               aria-pressed={active}
               className={[
-                "flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition",
+                "inline-flex min-h-[44px] items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-medium transition",
                 active
-                  ? "bg-white text-black border-white"
-                  : "bg-white/5 border-white/10 hover:bg-white/10",
+                  ? "border-white bg-white text-slate-950 shadow-sm"
+                  : "border-white/10 bg-white/[0.04] text-white/75 hover:border-white/20 hover:bg-white/[0.08] hover:text-white",
               ].join(" ")}
             >
-              {item.label}
+              <span>{item.label}</span>
 
               {typeof count === "number" && (
-                <span className="text-xs opacity-70">{count}</span>
+                <span
+                  className={[
+                    "rounded-full px-2 py-0.5 text-[11px]",
+                    active
+                      ? "bg-black/10 text-slate-900/80"
+                      : "bg-white/8 text-white/60",
+                  ].join(" ")}
+                >
+                  {count}
+                </span>
               )}
             </button>
           );
         })}
       </div>
-
-      <p className="text-xs text-white/50">
-        Este filtro es local y no genera nuevas peticiones.
-      </p>
     </div>
   );
 }
