@@ -19,22 +19,21 @@ export function useDeleteTodo() {
 
   const remove = useCallback(
     async (id: TodoId) => {
-      // Evita doble click
       if (deleting[id]) return;
 
-      setError("");
+      const current = useTodosStore.getState().byId[id];
+      const todoLabel = current?.todo ?? `Tarea ${id}`;
 
-      // 1) Optimistic: lo ocultamos ya (sin esperar API)
+      setError("");
       markDeleted(id);
 
-      // Si es local (id negativo), NO llamamos API. Lo removemos del store.
       if (id < 0) {
         purgeTodo(id);
 
         useToastStore.getState().push({
           variant: "success",
           title: "Tarea eliminada",
-          description: `ID #${id}`,
+          description: todoLabel,
           duration: 2200,
         });
 
@@ -42,21 +41,19 @@ export function useDeleteTodo() {
       }
 
       setDeleting((m) => ({ ...m, [id]: true }));
+
       try {
-        // 2) DELETE real
         await deleteTodo(id);
 
-        // 3) Limpieza: lo removemos definitivamente del store
         purgeTodo(id);
 
         useToastStore.getState().push({
           variant: "success",
           title: "Tarea eliminada",
-          description: `ID #${id}`,
+          description: todoLabel,
           duration: 2200,
         });
       } catch (e) {
-        // Rollback: lo volvemos a mostrar
         unmarkDeleted(id);
 
         const msg = errMsg(e);

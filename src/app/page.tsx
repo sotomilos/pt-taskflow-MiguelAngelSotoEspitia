@@ -69,12 +69,14 @@ export default function HomePage() {
             <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div className="max-w-2xl">
                 <span className="eyebrow">Task management demo</span>
+
                 <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-5xl">
                   TaskFlow
                 </h1>
+
                 <p className="subtitle max-w-xl">
-                  Administra tareas con paginación, optimistic UI, estado local y una
-                  experiencia visual más moderna, clara y profesional.
+                  Administra tareas con paginación, optimistic UI, estado local y
+                  una experiencia visual más moderna, clara y profesional.
                 </p>
               </div>
 
@@ -88,7 +90,9 @@ export default function HomePage() {
             <div className="grid gap-4 md:grid-cols-3">
               <div className="surface-muted p-4">
                 <p className="text-sm text-white/60">Tareas visibles</p>
-                <p className="mt-2 text-2xl font-semibold text-white">{totalVisible}</p>
+                <p className="mt-2 text-2xl font-semibold text-white">
+                  {totalVisible}
+                </p>
               </div>
 
               <div className="surface-muted p-4">
@@ -98,7 +102,9 @@ export default function HomePage() {
 
               <div className="surface-muted p-4">
                 <p className="text-sm text-white/60">Fuente remota</p>
-                <p className="mt-2 text-2xl font-semibold text-white">DummyJSON</p>
+                <p className="mt-2 text-2xl font-semibold text-white">
+                  DummyJSON
+                </p>
               </div>
             </div>
           </div>
@@ -112,7 +118,6 @@ export default function HomePage() {
                 El filtrado es local y no dispara nuevas peticiones.
               </p>
             </div>
-            <span className="chip">{counts.all} tareas</span>
           </div>
 
           <div className="divider" />
@@ -125,15 +130,21 @@ export default function HomePage() {
             <div>
               <h2 className="title">Crear tarea</h2>
               <p className="subtitle">
-                Se refleja primero en UI porque la API de prueba no persiste cambios.
+                Se refleja primero en UI porque la API de prueba no persiste
+                cambios.
               </p>
             </div>
+
             <span className="chip">POST + estado local</span>
           </div>
 
           <div className="divider" />
 
-          <CreateTodoForm onCreate={create} creating={creating} error={createError} />
+          <CreateTodoForm
+            onCreate={create}
+            creating={creating}
+            error={createError}
+          />
         </section>
 
         {toggleError ? (
@@ -170,21 +181,21 @@ export default function HomePage() {
           </section>
         ) : null}
 
-        {loading && (
+        {loading ? (
           <section className="surface p-4 md:p-5">
             <LoadingState />
           </section>
-        )}
+        ) : null}
 
-        {!loading && error && (
+        {!loading && error ? (
           <section className="surface p-4 md:p-5">
             <ErrorState message={error} onRetry={retry} />
           </section>
-        )}
+        ) : null}
 
-        {!loading && !error && (
+        {!loading && !error ? (
           <div className="space-y-6">
-            {hasLocal && (
+            {hasLocal ? (
               <TodoList
                 title="Creadas por ti"
                 todos={filteredLocalTodos}
@@ -193,7 +204,7 @@ export default function HomePage() {
                 toggling={toggling}
                 deleting={deleting}
               />
-            )}
+            ) : null}
 
             <TodoList
               title="Tareas disponibles"
@@ -213,7 +224,7 @@ export default function HomePage() {
               />
             </section>
           </div>
-        )}
+        ) : null}
       </div>
     </main>
   );

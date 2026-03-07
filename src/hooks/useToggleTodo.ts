@@ -20,35 +20,35 @@ export function useToggleTodo() {
       const current = useTodosStore.getState().byId[id];
       if (!current) return;
 
+      const todoLabel = current.todo;
       const nextCompleted = !current.completed;
       const prevCompleted = current.completed;
 
       setError("");
       patchTodo(id, { completed: nextCompleted });
 
-      // Si es local (id negativo), no hacemos PATCH a la API
       if (id < 0) {
         useToastStore.getState().push({
           variant: "success",
           title: nextCompleted ? "Marcada como completada" : "Marcada como pendiente",
-          description: `ID #${id}`,
+          description: todoLabel,
           duration: 1800,
         });
         return;
       }
 
       setToggling((m) => ({ ...m, [id]: true }));
+
       try {
         await updateTodo(id, { completed: nextCompleted });
 
         useToastStore.getState().push({
           variant: "success",
           title: nextCompleted ? "Marcada como completada" : "Marcada como pendiente",
-          description: `ID #${id}`,
+          description: todoLabel,
           duration: 1800,
         });
       } catch (e) {
-        // rollback
         patchTodo(id, { completed: prevCompleted });
 
         const msg = errMsg(e);

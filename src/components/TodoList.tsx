@@ -31,10 +31,6 @@ export function TodoList({
               : "Gestiona el estado de cada tarea de forma rápida y clara."}
           </p>
         </div>
-
-        <span className="chip">
-          {todos.length} {todos.length === 1 ? "item" : "items"}
-        </span>
       </div>
 
       <div className="divider" />

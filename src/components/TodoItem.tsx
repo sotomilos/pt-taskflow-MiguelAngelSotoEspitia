@@ -29,6 +29,7 @@ export function TodoItem({ todo, onToggle, onDelete, disabled }: TodoItemProps) 
             checked={todo.completed}
             disabled={disabled}
             onChange={() => onToggle?.(todo.id)}
+            aria-label={`Cambiar estado de ${todo.todo}`}
             className="h-5 w-5 cursor-pointer rounded border-white/20 bg-transparent accent-blue-500 disabled:cursor-not-allowed"
           />
         </div>
@@ -48,8 +49,7 @@ export function TodoItem({ todo, onToggle, onDelete, disabled }: TodoItemProps) 
           </div>
 
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-white/55">
-            <span>ID #{todo.id}</span>
-            {disabled ? <span>• procesando...</span> : null}
+            {disabled ? <span>Procesando...</span> : null}
           </div>
         </div>
       </label>
@@ -60,6 +60,7 @@ export function TodoItem({ todo, onToggle, onDelete, disabled }: TodoItemProps) 
             <button
               type="button"
               disabled={disabled}
+              aria-label={`Eliminar ${todo.todo}`}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -73,7 +74,7 @@ export function TodoItem({ todo, onToggle, onDelete, disabled }: TodoItemProps) 
             <ConfirmDialog
               open={confirmOpen}
               title="Eliminar tarea"
-              description="¿Seguro que quieres eliminar esta tarea? Esta acción no se puede deshacer."
+              description={`¿Seguro que quieres eliminar "${todo.todo}"? Esta acción no se puede deshacer.`}
               confirmLabel="Sí, eliminar"
               cancelLabel="Cancelar"
               onCancel={() => setConfirmOpen(false)}
