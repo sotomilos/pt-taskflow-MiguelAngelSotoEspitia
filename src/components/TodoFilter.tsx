@@ -47,9 +47,7 @@ export function TodoFilter({ value, onChange, counts }: TodoFilterProps) {
                 <span
                   className={[
                     "rounded-full px-2 py-0.5 text-[11px]",
-                    active
-                      ? "bg-black/10 text-slate-900/80"
-                      : "bg-white/8 text-white/60",
+                    active ? "bg-black/10 text-slate-900/80" : "bg-white/8 text-white/60",
                   ].join(" ")}
                 >
                   {count}

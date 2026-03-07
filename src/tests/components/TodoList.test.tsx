@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { TodoList } from "@/components/TodoList";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { Todo } from "@/types/todo";
 
 describe("TodoList", () => {

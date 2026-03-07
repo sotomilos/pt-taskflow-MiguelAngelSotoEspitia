@@ -59,7 +59,7 @@ export default function HomePage() {
 
   const visibleTodos = useMemo(
     () => [...filteredLocalTodos, ...filteredRemoteTodos],
-    [filteredLocalTodos, filteredRemoteTodos]
+    [filteredLocalTodos, filteredRemoteTodos],
   );
 
   const totalVisible = visibleTodos.length;
@@ -80,8 +80,8 @@ export default function HomePage() {
                   </h1>
 
                   <p className="subtitle max-w-2xl text-base md:text-lg">
-                    Crea tareas, mantén el control de tus pendientes y avanza con
-                    claridad en un espacio simple, limpio y enfocado.
+                    Crea tareas, mantén el control de tus pendientes y avanza con claridad
+                    en un espacio simple, limpio y enfocado.
                   </p>
                 </div>
               </div>
@@ -119,9 +119,7 @@ export default function HomePage() {
 
               <div className="surface-muted p-5">
                 <p className="text-sm text-white/60">Pendientes</p>
-                <p className="mt-2 text-2xl font-semibold text-white">
-                  {counts.pending}
-                </p>
+                <p className="mt-2 text-2xl font-semibold text-white">{counts.pending}</p>
               </div>
             </div>
           </div>
@@ -154,11 +152,7 @@ export default function HomePage() {
             </div>
 
             <div className="mt-5">
-              <CreateTodoForm
-                onCreate={create}
-                creating={creating}
-                error={createError}
-              />
+              <CreateTodoForm onCreate={create} creating={creating} error={createError} />
             </div>
           </section>
         </div>

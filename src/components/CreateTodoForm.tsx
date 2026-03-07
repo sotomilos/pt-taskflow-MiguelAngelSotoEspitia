@@ -8,11 +8,7 @@ type CreateTodoFormProps = {
   error?: string;
 };
 
-export function CreateTodoForm({
-  onCreate,
-  creating,
-  error,
-}: CreateTodoFormProps) {
+export function CreateTodoForm({ onCreate, creating, error }: CreateTodoFormProps) {
   const [text, setText] = useState("");
 
   return (
@@ -52,9 +48,7 @@ export function CreateTodoForm({
       <div className="flex min-h-[24px] items-start justify-between gap-4">
         <div className="flex-1">
           {error ? (
-            <p className="text-sm text-rose-300">
-              No se pudo crear la tarea. {error}
-            </p>
+            <p className="text-sm text-rose-300">No se pudo crear la tarea. {error}</p>
           ) : (
             <p className="text-sm text-white/45">
               Escribe una tarea concreta y fácil de ejecutar.
@@ -62,9 +56,7 @@ export function CreateTodoForm({
           )}
         </div>
 
-        <span className="shrink-0 text-xs text-white/40">
-          {text.trim().length}/120
-        </span>
+        <span className="shrink-0 text-xs text-white/40">{text.trim().length}/120</span>
       </div>
     </div>
   );
