@@ -112,8 +112,10 @@ export default function HomePage() {
                 El filtrado es local y no dispara nuevas peticiones.
               </p>
             </div>
-            <span className="chip">{counts.all} totales</span>
+            <span className="chip">{counts.all} tareas</span>
           </div>
+
+          <div className="divider" />
 
           <TodoFilter value={filter} onChange={setFilter} counts={counts} />
         </section>
@@ -123,11 +125,13 @@ export default function HomePage() {
             <div>
               <h2 className="title">Crear tarea</h2>
               <p className="subtitle">
-                Las nuevas tareas se reflejan primero en UI para una experiencia más ágil.
+                Se refleja primero en UI porque la API de prueba no persiste cambios.
               </p>
             </div>
-            <span className="chip">Estado local</span>
+            <span className="chip">POST + estado local</span>
           </div>
+
+          <div className="divider" />
 
           <CreateTodoForm onCreate={create} creating={creating} error={createError} />
         </section>

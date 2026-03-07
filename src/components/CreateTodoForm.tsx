@@ -8,11 +8,7 @@ type CreateTodoFormProps = {
   error?: string;
 };
 
-export function CreateTodoForm({
-  onCreate,
-  creating,
-  error,
-}: CreateTodoFormProps) {
+export function CreateTodoForm({ onCreate, creating, error }: CreateTodoFormProps) {
   const [text, setText] = useState("");
 
   return (
@@ -51,18 +47,14 @@ export function CreateTodoForm({
 
       <div className="flex min-h-[24px] items-center justify-between gap-3">
         {error ? (
-          <p className="text-sm text-rose-300">
-            Error: {error}
-          </p>
+          <p className="text-sm text-rose-300">Error: {error}</p>
         ) : (
           <p className="text-xs text-white/60">
             Se refleja primero en la UI porque la API de prueba no persiste cambios.
           </p>
         )}
 
-        <span className="text-xs text-white/40">
-          {text.trim().length}/120
-        </span>
+        <span className="text-xs text-white/40">{text.trim().length}/120</span>
       </div>
     </div>
   );
