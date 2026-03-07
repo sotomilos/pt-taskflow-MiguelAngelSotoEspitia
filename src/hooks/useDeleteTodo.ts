@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { deleteTodo } from "@/lib/api";
 import { useTodosStore } from "@/store/todosStore";
+import { useToastStore } from "@/store/toastStore";
 import type { TodoId } from "@/types/todo";
 
 function errMsg(e: unknown) {
@@ -29,20 +30,43 @@ export function useDeleteTodo() {
       // Si es local (id negativo), NO llamamos API. Lo removemos del store.
       if (id < 0) {
         purgeTodo(id);
+
+        useToastStore.getState().push({
+          variant: "success",
+          title: "Tarea eliminada",
+          description: `ID #${id}`,
+          duration: 2200,
+        });
+
         return;
       }
 
       setDeleting((m) => ({ ...m, [id]: true }));
       try {
-        // 2) DELETE real para cumplir el requisito
+        // 2) DELETE real
         await deleteTodo(id);
 
         // 3) Limpieza: lo removemos definitivamente del store
         purgeTodo(id);
+
+        useToastStore.getState().push({
+          variant: "success",
+          title: "Tarea eliminada",
+          description: `ID #${id}`,
+          duration: 2200,
+        });
       } catch (e) {
         // Rollback: lo volvemos a mostrar
         unmarkDeleted(id);
-        setError(errMsg(e));
+
+        const msg = errMsg(e);
+        setError(msg);
+
+        useToastStore.getState().push({
+          variant: "error",
+          title: "No se pudo eliminar",
+          description: msg,
+        });
       } finally {
         setDeleting((m) => {
           const next = { ...m };
