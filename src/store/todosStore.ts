@@ -1,4 +1,5 @@
 // src/store/todosStore.ts
+"use client";
 import { create } from "zustand";
 import type { Todo, TodoId, TodoListResponse } from "@/types/todo";
 

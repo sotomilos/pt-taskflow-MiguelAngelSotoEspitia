@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { createTodo } from "@/lib/api";
 import { useTodosStore } from "@/store/todosStore";
+import { useToastStore } from "@/store/toastStore";
 
 function errMsg(e: unknown) {
   if (e instanceof Error) return e.message;
@@ -29,13 +30,29 @@ export function useCreateTodo() {
         // 2) POST real a la API (aunque no persiste, sirve para simular latencia y posibles errores)
         await createTodo({ todo: trimmed, completed: false, userId: 1 });
 
-        // Nota: no reemplazamos el id local por el id de la API
-        // porque la API no persiste; nuestro source of truth es el store local.
+        // Toast de éxito
+        useToastStore.getState().push({
+          variant: "success",
+          title: "Tarea creada",
+          description: trimmed,
+          duration: 2400,
+        });
+
         return true;
       } catch (e) {
         // 3) Rollback si falla
         purgeTodo(local.id);
-        setError(errMsg(e));
+
+        const msg = errMsg(e);
+        setError(msg);
+
+        // Toast de error
+        useToastStore.getState().push({
+          variant: "error",
+          title: "No se pudo crear la tarea",
+          description: msg,
+        });
+
         return false;
       } finally {
         setCreating(false);
