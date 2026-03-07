@@ -225,9 +225,13 @@ body {
   }
 
   .modal-icon {
-    @apply flex h-11 w-11 items-center justify-center rounded-full border text-sm font-bold text-rose-200;
-    background: rgba(244, 63, 94, 0.12);
-    border-color: rgba(244, 63, 94, 0.22);
+    @apply flex h-12 w-12 items-center justify-center rounded-full border text-rose-200 shadow-[0_10px_30px_rgba(244,63,94,0.16)];
+    background: linear-gradient(
+      180deg,
+      rgba(244, 63, 94, 0.16) 0%,
+      rgba(244, 63, 94, 0.1) 100%
+    );
+    border-color: rgba(244, 63, 94, 0.24);
   }
 
   .status-pending {

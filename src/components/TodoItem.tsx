@@ -42,11 +42,11 @@ export function TodoItem({ todo, onToggle, onDelete, disabled = false }: TodoIte
           <div className="flex min-w-0 items-start gap-3">
             <button
               type="button"
+              role="checkbox"
+              aria-checked={todo.completed}
+              aria-label={`Cambiar estado de ${text}`}
               onClick={() => onToggle?.(todo.id)}
               disabled={disabled}
-              aria-label={
-                todo.completed ? "Marcar como pendiente" : "Marcar como completada"
-              }
               className={[
                 "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition",
                 todo.completed
@@ -60,7 +60,7 @@ export function TodoItem({ todo, onToggle, onDelete, disabled = false }: TodoIte
             <div className="min-w-0">
               <p
                 className={[
-                  "text-sm font-medium leading-6 text-white md:text-base",
+                  "text-sm font-medium leading-6 md:text-base",
                   todo.completed ? "text-white/55 line-through" : "text-white",
                 ].join(" ")}
               >
@@ -83,6 +83,7 @@ export function TodoItem({ todo, onToggle, onDelete, disabled = false }: TodoIte
           <div className="flex items-center justify-end gap-2">
             <button
               type="button"
+              aria-label={`Eliminar ${text}`}
               onClick={() => setConfirmOpen(true)}
               disabled={disabled}
               className="btn-danger"

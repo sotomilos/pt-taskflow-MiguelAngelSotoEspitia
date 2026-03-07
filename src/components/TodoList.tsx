@@ -38,7 +38,7 @@ export function TodoList({
           <div className="surface-muted flex min-h-[160px] items-center justify-center rounded-3xl p-6 text-center">
             <div className="max-w-md">
               <p className="text-base font-medium text-white">
-                Todo está al día por aquí
+                No hay tareas para mostrar
               </p>
               <p className="mt-2 text-sm leading-6 text-white/60">
                 Prueba cambiando el filtro o crea una nueva tarea para empezar a

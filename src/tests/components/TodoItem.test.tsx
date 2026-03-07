@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { TodoItem } from "@/components/TodoItem";
@@ -29,10 +29,13 @@ describe("TodoItem", () => {
     );
 
     const dialog = screen.getByRole("dialog", { name: /eliminar tarea/i });
+
     expect(dialog).toBeInTheDocument();
-    expect(dialog).toHaveTextContent(
-      '¿Seguro que quieres eliminar "Watch a documentary"?',
-    );
+    expect(dialog).toHaveTextContent("Watch a documentary");
+    expect(within(dialog).getByRole("button", { name: /cancelar/i })).toBeInTheDocument();
+    expect(
+      within(dialog).getByRole("button", { name: /sí, eliminar/i }),
+    ).toBeInTheDocument();
   });
 
   it("llama onToggle con el id correcto", async () => {

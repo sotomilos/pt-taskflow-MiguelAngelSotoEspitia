@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { TriangleAlert } from "lucide-react";
 
 type ConfirmDialogProps = {
   open: boolean;
@@ -54,19 +55,20 @@ export function ConfirmDialog({
       onClick={() => {
         if (!loading) onClose();
       }}
-      aria-hidden="true"
     >
       <div
-        className="modal-panel animate-in zoom-in-95"
+        className="modal-panel"
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-dialog-title"
         aria-describedby="confirm-dialog-description"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="space-y-3">
-          <div className="modal-icon-wrap">
-            <div className="modal-icon">!</div>
+        <div className="space-y-4">
+          <div className="modal-icon-wrap" aria-hidden="true">
+            <div className="modal-icon">
+              <TriangleAlert className="h-5 w-5" strokeWidth={2.2} />
+            </div>
           </div>
 
           <div className="space-y-2">
